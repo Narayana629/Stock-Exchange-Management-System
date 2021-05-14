@@ -1,1 +1,1 @@
-web:gunicorn SES.wsgi --log-file -
+web: gunicorn SES.wsgi --log-file -
