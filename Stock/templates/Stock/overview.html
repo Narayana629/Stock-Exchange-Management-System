@@ -1,0 +1,257 @@
+{% extends "Stock/index.html" %}
+
+{% block content %}
+<h2>OVERVIEW</h2>
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+<div class="container-fluid p-0">
+  <div class="alert {{ message.tags }} alert-dismissible" role="alert" >
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    {{ message }}
+  </div>
+</div>
+{% endfor %}
+</ul>
+{% endif %}
+{% if d %}
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Stocks</h4>
+                       <table class="table">
+                      <thead>
+                        <tr>
+                          <th>Name</th>
+                          <th>Last Price</th>
+                          <th>change</th>
+                          <th>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                       {% for i in d %}
+                        <tr>
+                          <td>{{i.name}}</td>
+                          <td>Rs.{{i.lastprice}}/-</td>
+                           {% if i.type == "Profit" %}
+                          <td>+{{i.change}}%</td>
+                          <td>
+                            <label class="badge badge-success">{{ i.type }}</label>
+                          </td>
+                          {% endif %}
+                           {% if i.type == "Loss" %}
+                          <td>-{{i.change}}%</td>
+                          <td>
+                            <label class="badge badge-danger">{{ i.type }}</label>
+                          </td>
+                          {% endif %}
+                           {% if i.type == "Stable" %}
+                          <td>{{i.change}}</td>
+                          <td>
+                            <label class="badge badge-info">{{ i.type }}</label>
+                          </td>
+                          {% endif %}
+
+                        </tr>
+                      {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+
+<br>
+<div class="row">
+<div class="col-md-4 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title mb-0">Stocks On Profit</h4>
+                    <div class="table-responsive">
+                      <table class="table table-stretched">
+
+                        <tbody>
+                        {% for i in d %}
+                        {% if i.type == "Profit" %}
+                          <tr>
+                            <td>
+                              <p class="mb-1 text-dark font-weight-medium">{{i.ticker}}</p><small class="font-weight-medium">{{i.name}}</small>
+                            </td>
+
+
+                            <td class="text-success font-weight-medium">+ Rs.{{ i.profit }}/-</td>
+
+
+
+                          </tr>
+                        {% endif %}
+                    {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+<div class="col-md-4 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title mb-0">Stocks On Loss</h4>
+                    <div class="table-responsive">
+                      <table class="table table-stretched">
+
+                        <tbody>
+                        {% for i in d %}
+                        {% if i.type == "Loss" %}
+                          <tr>
+                            <td>
+                              <p class="mb-1 text-dark font-weight-medium">{{i.ticker}}</p><small class="font-weight-medium">{{i.name}}</small>
+                            </td>
+
+
+
+                            <td class="text-danger font-weight-medium">- Rs.{{ i.profit }}/-</td>
+
+
+                          </tr>
+                        {% endif %}
+                    {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+  <div class="col-md-4 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title mb-0">Stable Stocks </h4>
+                    <div class="table-responsive">
+                      <table class="table table-stretched">
+
+                        <tbody>
+                        {% for i in d %}
+                        {% if i.type == "Stable" %}
+                          <tr>
+                            <td>
+                              <p class="mb-1 text-dark font-weight-medium">{{i.ticker}}</p><small class="font-weight-medium">{{i.name}}</small>
+                            </td>
+
+
+
+                            <td class="text-danger font-weight-medium">- Rs.{{ i.profit }}/-</td>
+
+
+                          </tr>
+                        {% endif %}
+                    {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+</div>
+{% endif %}
+<div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Active Stocks</h4>
+                      <table class="table table-stretched">
+<thead>
+      <tr>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Volume</th>
+        <th>Market</th>
+
+      </tr>
+    </thead>
+    <tbody>
+    <!-- jinja2 Technique -->
+    {% if r %}
+    {% for i in r %}
+      <tr>
+        <td>{{i.Name}}</td>
+        <td>Rs.{{i.Price}}/-</td>
+        <td>{{i.Volume}}</td>
+        <td>{{i.Market}}</tr>
+      </tr>
+    {% endfor %}
+    {% endif %}
+    </tbody>
+
+                      </table>
+                    </div>
+
+                  </div>
+<br>
+<div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Top Gainers</h4>
+                      <table class="table table-stretched">
+<thead>
+      <tr>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Volume</th>
+        <th>Change</th>
+        <th>Market</th>
+
+      </tr>
+    </thead>
+    <tbody>
+    <!-- jinja2 Technique -->
+    {% if g %}
+    {% for i in g %}
+      <tr>
+        <td>{{i.Name}}</td>
+        <td>Rs.{{i.Price}}/-</td>
+        <td>{{i.Volume}}</td>
+        <td>+{{i.change }}%</td>
+        <td>{{i.Market}}</tr>
+      </tr>
+    {% endfor %}
+    {% endif %}
+    </tbody>
+
+                      </table>
+                    </div>
+
+                  </div>
+<br>
+<div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Worst Performers</h4>
+                      <table class="table table-stretched">
+<thead>
+      <tr>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Volume</th>
+        <th>Change</th>
+        <th>Market</th>
+
+      </tr>
+    </thead>
+    <tbody>
+    <!-- jinja2 Technique -->
+    {% if l %}
+    {% for i in l %}
+      <tr>
+        <td>{{i.Name}}</td>
+        <td>Rs.{{i.Price}}/-</td>
+        <td>{{i.Volume}}</td>
+        <td>-{{i.change }}%</td>
+        <td>{{i.Market}}</tr>
+      </tr>
+    {% endfor %}
+    {% endif %}
+    </tbody>
+
+                      </table>
+                    </div>
+
+                  </div>
+{% endblock content %}

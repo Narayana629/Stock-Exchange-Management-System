@@ -1,0 +1,32 @@
+{% extends "Stock/index.html" %}
+{% block content %}
+<h2>ACTIVITY</h2>
+              <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+
+                    {% for i in activities %}
+
+                      {% if i.type == "Buy" %}
+                      <h4><i class="material-icons">&#xe893;</i>
+   Bought {{ i.quantity }} stocks of {{ i.name }} stock on {{ i.datebought }} </h4><hr>
+                      {% endif %}
+                      {% if i.type == 'search' %}
+                      <h4><i class="material-icons">&#xe893;</i>
+Searched  for {{ i.name }}  on {{ i.datebought }} </h4><hr>
+                      {% endif %}
+                      {% if i.type == 'Analyse'  %}
+                      <h4><i class="material-icons">&#xe893;</i>
+Analysed   {{ i.name }} stock  on {{ i.datebought }} </h4><hr>
+                      {% endif %}
+                    {% if i.type == 'Sell'  %}
+                      <h4><i class="material-icons">&#xe893;</i>
+ Sold {{ i.quantity}} stocks of {{ i.name }} stock  on {{ i.datebought }} </h4><hr>
+                      {% endif %}
+
+                    {% endfor %}
+
+                  </div>
+                </div>
+              </div>
+{% endblock content %}

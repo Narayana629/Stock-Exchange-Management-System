@@ -1,0 +1,333 @@
+{% extends "Stock/index.html" %}
+{% block content %}
+<h2>PROFILE</h2>
+
+{% for message in messages %}
+  <h4>{{ message }}</h4>
+  {% endfor %}
+{% if prof %}
+<div class="col-12 grid-margin">
+  <div class="col-lg-6 grid-margin stretch-card">
+  <div class="card">
+                  <div class="card-body">
+                      <center>
+{% if pho.photo   %}
+ <img style="border-radius: 50%;" src="{{ pho.photo.url }}" width="300" height="300" >
+
+                          {% endif %}</center>
+    <table class="table">
+
+                  <tr>
+                      <td>First Name</td>
+                           <td>{{prof.first_name}}</td>
+
+                        </tr>
+        <tr>
+                      <td>Last Name</td>
+                           <td>{{prof.last_name}}</td>
+
+                        </tr>
+         <tr>
+                      <td>Email</td>
+                           <td>{{prof.email}}</td>
+
+                        </tr>
+         <tr>
+                      <td>Gender</td>
+                           <td>{{prof.gender}}</td>
+
+                        </tr>
+        <tr>
+                      <td>Date of Birth</td>
+                           <td>{{prof.dateofbirth}}</td>
+
+                        </tr>
+        <tr>
+                      <td>Phone </td>
+                           <td>{{prof.phone}}</td>
+
+                        </tr>
+        <tr>
+                      <td>Qualification</td>
+                           <td>{{prof.qualification}}</td>
+
+                        </tr>
+        <tr>
+                      <td>Address 1</td>
+                           <td>{{prof.address1}}</td>
+
+                        </tr>
+        <tr>
+                      <td>Address 2</td>
+                           <td>{{prof.address2}}</td>
+
+                        </tr>
+        <tr>
+                      <td>State</td>
+                           <td>{{prof.state}}</td>
+
+                        </tr>
+        <tr>
+                      <td>PostCode</td>
+                           <td>{{prof.postcode}}</td>
+
+                        </tr>
+        <tr>
+                      <td>City</td>
+                           <td>{{prof.city}}</td>
+
+                        </tr>
+        <tr>
+                      <td>Country</td>
+                           <td>{{prof.country}}</td>
+
+                        </tr>
+
+
+
+    </table>
+      </div>
+
+  </div></div>
+    <form action="/Stock/profile" method="post">
+        {% csrf_token %}
+       <input type="hidden" value="updatevalue" name="update">
+    <input type="submit" class="btn btn-warning btn-rounded btn-fw" value="update">
+    </form>
+</div>
+  <br>
+{% endif %}
+{% if prof1 %}
+               <div class="card">
+                  <div class="card-body">
+
+                    <form class="form-sample" action="/Stock/profile" method="post">
+                      {% csrf_token %}
+                      <p class="card-description"> Personal info </p>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">First Name</label>
+                            <div class="col-sm-9">
+
+                            {% if prof1.first_name  %}
+                              <input type="text" class="form-control" name="fname" value="{{ prof1.first_name }}">
+                            {% else %}
+                                <input type="text" class="form-control" name="fname" >
+                                {% endif %}
+
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Last Name</label>
+                            <div class="col-sm-9">
+                                 {% if prof1.last_name  %}
+                                <input type="text" class="form-control" name="lname" value="{{ prof1.last_name }}"/>
+                                {% else %}
+                                <input type="text" class="form-control" name="lname" >
+                                {% endif %}
+
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Gender</label>
+                            <div class="col-sm-9">
+
+                                {% if prof1.gender  %}
+                              <select class="form-control" name="gender" value="{{ prof1.gender }}">
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                              </select>
+                                {% else %}
+                                <input type="text" class="form-control" name="gender" >
+                                {% endif %}
+
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Date of Birth</label>
+                            <div class="col-sm-9">
+
+                                {% if prof1.dateofbirth  %}
+                                <input class="form-control" placeholder="yyyy-mm-dd" name="dob" value="2002-08-17" />
+                                 {% else %}
+                                <input type="text" class="form-control" name="dob" >
+                                {% endif %}
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                        <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Email</label>
+                            <div class="col-sm-9">
+
+                                      {% if prof1.email  %}
+                                <input type="text" class="form-control" name="email"  value="{{ user.email }}" readonly>
+                                     {% else %}
+                                <input type="text" class="form-control" name="email" >
+                                {% endif %}
+
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Phone Number</label>
+                            <div class="col-sm-9">
+
+                                     {% if prof1.phone  %}
+                                <input type="text" class="form-control" name="phone" value="{{ prof1.phone }}"/>
+                                 {% else %}
+                                <input type="text" class="form-control" name="phone" >
+                                {% endif %}
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Qualification</label>
+                            <div class="col-sm-9">
+
+                                 {% if prof1.qualification  %}
+                                <select class="form-control" name="qualification" value="{{ prof1.qualification }}">
+                                <option value="cbse">CBSE</option>
+                                <option value="diploma">DIPLOMA</option>
+                                <option value="UG">UG</option>
+                                <option value="PG">PG</option>
+                              </select>
+                                 {% else %}
+                                <input type="text" class="form-control" name="qualification" >
+                                {% endif %}
+
+                            </div>
+                          </div>
+                        </div>
+
+
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Upload your photo</label>
+                              <div class="col-sm-9">
+                              <input type="file" name="photo" />
+                              </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <p class="card-description"> Address </p>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Address 1</label>
+                            <div class="col-sm-9">
+
+                                     {% if prof1.address1  %}
+                                <input type="text" class="form-control" name="address1" value="{{ prof1.address1 }}"/>
+                                 {% else %}
+                                <input type="text" class="form-control" name="address1" >
+                                {% endif %}
+
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">State</label>
+                            <div class="col-sm-9">
+
+                                 {% if prof1.state  %}
+                                <input type="text" class="form-control" name="state" value="{{ prof1.state }}"/>
+                                 {% else %}
+                                <input type="text" class="form-control" name="state" >
+                                {% endif %}
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Address 2</label>
+                            <div class="col-sm-9">
+
+                                 {% if prof1.address2  %}
+                              <input type="text" class="form-control" name="address2" value="{{ prof1.address2 }}"/>
+                                 {% else %}
+                                <input type="text" class="form-control" name="address2" >
+                                {% endif %}
+
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Postcode</label>
+                            <div class="col-sm-9">
+
+                                 {% if prof1.postcode  %}
+                                <input type="text" class="form-control" name="postcode" value="{{ prof1.postcode }}"/>
+                                 {% else %}
+                                <input type="text" class="form-control" name="postcode" >
+                                {% endif %}
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">City</label>
+                            <div class="col-sm-9">
+                                 {% if prof1.city  %}
+
+                                <input type="text" class="form-control" name="city" value="{{ prof1.city }}"/>
+                                 {% else %}
+                                <input type="text" class="form-control" name="city" >
+                                {% endif %}
+
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Country</label>
+                            <div class="col-sm-9">
+
+                                 {% if prof1.country  %}
+                              <input type="text" class="form-control" name="country" value="{{ prof1.country}}" />
+                                 {% else %}
+                                <input type="text" class="form-control" name="country" >
+                                {% endif %}
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                        <input type="hidden" value="updated" name="update">
+                      <input type="submit"  class="btn btn-warning btn-rounded btn-fw" value="update">
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+{% endif %}
+
+{% endblock content %}

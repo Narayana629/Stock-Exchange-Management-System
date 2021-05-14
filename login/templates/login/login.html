@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invest N Grow</title>
+    <link rel="stylesheet" href="{% static 'login.css' %}">
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+</head>
+<body>
+<center><img src="{% static 'assets/images/Invest and grow logo.png' %}" alt="logo" height="100" width="250"/></center>
+
+  {% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+<div class="container-fluid p-0">
+  <div class="alert {{ message.tags }} alert-dismissible" role="alert" >
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    {{ message }}
+  </div>
+</div>
+{% endfor %}
+</ul>
+{% endif %}
+<br><br>
+  <form action="/login" class="box" method="post" >
+    {% csrf_token %}
+    <p >Login</p>
+    <input type="text" placeholder='Username' name="username">
+
+    <input type="password" placeholder="Password" name="password">
+    <a href="#"> <p>Forgot password?</p></a>
+    <p style="color:blue"><input type="checkbox"> Remember me
+    </p>
+    <input type="submit" value="Login">
+    Don't Have An Account<br>
+    <a href="{% url 'register' %}" style="color:blue">Register Here</a>
+  </form>
+</body>
+</html>
