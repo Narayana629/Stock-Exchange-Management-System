@@ -3,19 +3,19 @@ from django.db import models
 # Create your models here.
 
 class Profile(models.Model):
-    first_name=models.CharField(max_length=60,null=True)
-    last_name = models.CharField(max_length=25,null=True)
-    email = models.CharField(max_length=50,null=True)
-    gender=models.CharField(max_length=10,null=True)
-    dateofbirth=models.DateField(null=True)
-    phone=models.IntegerField(null=True)
-    qualification=models.CharField(max_length=20,null=True)
-    address1=models.CharField(max_length=60,null=True)
-    address2=models.CharField(max_length=60,null=True)
-    state = models.CharField(max_length=25,null=True)
-    postcode = models.IntegerField(null=True)
-    city = models.CharField(max_length=25,null=True)
-    country = models.CharField(max_length=25,null=True)
+    first_name=models.CharField(max_length=60,null=True,blank=True)
+    last_name = models.CharField(max_length=25,null=True,blank=True)
+    email = models.CharField(max_length=50,null=True,blank=True)
+    gender=models.CharField(max_length=10,null=True,blank=True)
+    dateofbirth=models.DateField(null=True,blank=True)
+    phone=models.IntegerField(null=True,blank=True)
+    qualification=models.CharField(max_length=20,null=True,blank=True)
+    address1=models.CharField(max_length=60,null=True,blank=True)
+    address2=models.CharField(max_length=60,null=True,blank=True)
+    state = models.CharField(max_length=25,null=True,blank=True)
+    postcode = models.IntegerField(null=True,blank=True)
+    city = models.CharField(max_length=25,null=True,blank=True)
+    country = models.CharField(max_length=25,null=True,blank=True)
     photo=models.ImageField(default='',null=True,blank=True,upload_to='')
 
 
