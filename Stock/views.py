@@ -291,7 +291,7 @@ def buystocks(request):
             s = requests.get(url).content
             companies = pd.read_csv(io.StringIO(s.decode('utf-8')))
             companies = companies[1:6]
-            print(companies['Company Name'])
+            print(companies)
 
             Symbols = companies['Symbol'].tolist()
             Name = companies['Company Name'].tolist()
@@ -318,8 +318,9 @@ def buystocks(request):
                     None
             #stock_final = stock_final.sort_values(by='Adj Close', ascending=False)
             stock_final.rename(columns={'Adj Close': 'Adj_Close'}, inplace=True)
+            print("sjbvjdjddddddddd",stock_final)
             data=stock_final[['Name', 'Ticker', 'Adj_Close']].head(20)
-
+            print("mnmnmnmn",data)
             alldata=[]
             for i in range(data.shape[0]):
                 temp=data.iloc[i]
