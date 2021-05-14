@@ -29,10 +29,10 @@ def index(request):
     ins=Profile.objects.get(email=request.user.email)
     return render(request,'Stock/index.html',{'pho':ins})
 def overview(request):
-    '''if not Profile.objects.filter(email=request.user.email).exists():
-        ins = Profile(email=request.user.email)
+    if not Profile.objects.filter(email=request.user.email).exists():
+        ins = Profile(first_name=request.user.first_name,email=request.user.email)
 
-        ins.save()'''
+        ins.save()
     if request.user.is_authenticated:
         if(Buystock.objects.filter(username=request.user.username).exists()):
             all=Buystock.objects.filter(username=request.user.username)
