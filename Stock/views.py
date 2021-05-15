@@ -362,6 +362,8 @@ def sellstocks(request):
                 s.delete()
                 s = Stockd.objects.get(ticker=ticker, username=request.user.username)
                 wall = Wallet.objects.get(username=request.user.username)
+                if wall.balance==None or wall.balance=='':
+                    wall.balance=0
                 wall.balance = wall.balance + sellqty *s.lastprice
                 print("wiufiuewb",wall.balance)
                 wall.save()
@@ -375,6 +377,8 @@ def sellstocks(request):
                 s.save()
                 s = Stockd.objects.get(ticker=ticker,username=request.user.username)
                 wall = Wallet.objects.get(username=request.user.username)
+                if wall.balance==None or wall.balance=='':
+                    wall.balance=0
                 wall.balance = wall.balance + sellqty * s.lastprice
                 print("wiufiuewb", wall.balance)
                 wall.save()
