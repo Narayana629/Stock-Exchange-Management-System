@@ -119,18 +119,24 @@ def profile(request):
             print("ppppppppppppp",photo)
             insup = Profile.objects.get(email=request.user.email)
             Profile.objects.filter(email=request.user.email).update()
+            
             insup.first_name=fname
             insup.last_name=lname
             insup.gender=gender
-            insup.dateofbirth=dob
-            insup.phone=phone
+
             insup.qualification=qualification
             insup.address1=add1
             insup.address2=add2
             insup.state=state
-            insup.postcode=post
+
             insup.city=city
             insup.country=country
+            if insup.dateofbirth!='':
+                insup.dateofbirth = dob
+            if insup.phone != '':
+                insup.phone = phone
+            if insup.postcode != '':
+                insup.postcode = post
             if photo != '':
                 insup.photo=photo
                 insup.save()
@@ -277,7 +283,7 @@ def buystocks(request):
             return render(request, 'Stock/buystocks.html', {'d': alldata,'pho':po})
 
         else:
-            import pandas as pd
+            '''import pandas as pd
             import yfinance as yf
             import datetime
             import time
@@ -326,7 +332,7 @@ def buystocks(request):
                 temp=data.iloc[i]
                 alldata.append(dict(temp))
                 context={'d':alldata}
-            print(alldata)
+            print(alldata)'''
             po = Profile.objects.get(email=request.user.email)
 
             from yahoo_fin import stock_info as si
@@ -335,7 +341,7 @@ def buystocks(request):
             json_records = g.reset_index().to_json(orient='records')
             datag = []
             datag = json.loads(json_records)
-            return render(request,'Stock/buystocks.html',{'d':alldata,'pho':po,'datag':datag})
+            return render(request,'Stock/buystocks.html',{'pho':po,'datag':datag})
     else:
         auth.logout(request)
         return render(request, 'login/login.html')
