@@ -15,7 +15,7 @@ def login(request):
         user=auth.authenticate(username=username,password=password)
         if user is not None:
             auth.login(request,user)
-            return overview(request)
+            return redirect('Stock/')
         else:
             messages.error(request,'Invalid Credintials')
             return redirect('login')

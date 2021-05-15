@@ -6,7 +6,11 @@
   <h4>{{ message }}</h4>
   {% endfor %}
 {% if prof %}
+
+    <center>
+
 <div class="col-12 grid-margin">
+
   <div class="col-lg-6 grid-margin stretch-card">
   <div class="card">
                   <div class="card-body">
@@ -88,13 +92,18 @@
     </table>
       </div>
 
-  </div></div>
+  </div>
+
+  </div>
+
     <form action="/Stock/profile" method="post">
         {% csrf_token %}
        <input type="hidden" value="updatevalue" name="update">
     <input type="submit" class="btn btn-warning btn-rounded btn-fw" value="update">
     </form>
+
 </div>
+        </center>
   <br>
 {% endif %}
 {% if prof1 %}
@@ -158,7 +167,7 @@
                             <div class="col-sm-9">
 
                                 {% if prof1.dateofbirth  %}
-                                <input class="form-control" placeholder="yyyy-mm-dd" name="dob" value="2002-08-17" />
+                                <input type="text" class="form-control" placeholder="yyyy-mm-dd" name="dob" value="2002-08-17" />
                                  {% else %}
                                 <input type="text" class="form-control" name="dob" >
                                 {% endif %}
@@ -223,7 +232,7 @@
                           <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Upload your photo</label>
                               <div class="col-sm-9">
-                              <input type="file" name="photo" />
+                              <input type="file" name="photo1" />
                               </div>
                           </div>
                         </div>

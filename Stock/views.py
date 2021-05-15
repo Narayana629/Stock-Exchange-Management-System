@@ -82,10 +82,10 @@ def overview(request):
         if Stockd.objects.filter(username=request.user.username).exists() and Buystock.objects.filter(username=request.user.username).exists():
             st=Stockd.objects.filter(username=request.user.username)
             po=Profile.objects.get(email=request.user.email)
-            return render(request, 'Stock/overview.html', {'d': st,'r':data,'g':datag,'l':datal,'pho':po})
+            return render(request, 'Stock/overview.html', {'d': st,'r':data,'g':datag,'l':datal,'pho':po,'title':'Invest N Grow'})
         else:
             po = Profile.objects.get(email=request.user.email)
-            return render(request,'Stock/overview.html',{'r':data,'g':datag,'l':datal,'pho':po})
+            return render(request,'Stock/overview.html',{'r':data,'g':datag,'l':datal,'pho':po,'title':'Invest N Grow'})
     else:
         auth.logout(request)
         return render(request, 'login/login.html')
@@ -105,18 +105,20 @@ def profile(request):
             fname=request.POST['fname']
             lname=request.POST['lname']
             gender=request.POST['gender']
+
             dob=request.POST['dob']
             email=request.POST['email']
+
             phone=request.POST['phone']
             qualification=request.POST['qualification']
             add1=request.POST['address1']
             add2=request.POST['address2']
             state=request.POST['state']
+            photo=request.POST['photo1']
             post=request.POST['postcode']
             city=request.POST['city']
             country=request.POST['country']
-            photo=request.POST['photo']
-            print("ppppppppppppp",photo)
+
             insup = Profile.objects.get(email=request.user.email)
             Profile.objects.filter(email=request.user.email).update()
             
@@ -131,11 +133,11 @@ def profile(request):
 
             insup.city=city
             insup.country=country
-            if insup.dateofbirth!='':
+            if dob!='':
                 insup.dateofbirth = dob
-            if insup.phone != '':
+            if phone != '' and phone!=None:
                 insup.phone = phone
-            if insup.postcode != '':
+            if post != '' and post!=None:
                 insup.postcode = post
             if photo != '':
                 insup.photo=photo
@@ -145,10 +147,10 @@ def profile(request):
             insup.save()
             messages.success(request,'Sucessfully Updated')
             insupp = Profile.objects.get(email=request.user.email)
-            return render(request, 'Stock/profile.html', {'prof': insupp,'pho':insupp})
+            return render(request, 'Stock/profile.html', {'prof': insupp,'pho':insupp,'title':'Invest N Grow - Profile'})
 
 
-        return render(request,'Stock/profile.html',{'prof':insppp,'pho':insppp})
+        return render(request,'Stock/profile.html',{'prof':insppp,'pho':insppp,'title':'Invest N Grow - Profile'})
     else:
         auth.logout(request)
         return render(request, 'login/login.html')
@@ -157,7 +159,7 @@ def activity(request):
     if request.user.is_authenticated:
         po = Profile.objects.get(email=request.user.email)
         acty=Activity.objects.filter(username=request.user.username).order_by('-datebought')
-        return render(request,'Stock/activity.html',{'activities':acty,'pho':po})
+        return render(request,'Stock/activity.html',{'activities':acty,'pho':po,'title':'Invest N Grow - Activity'})
     else:
         auth.logout(request)
         return render(request, 'login/login.html')
@@ -206,10 +208,10 @@ def wallet(request):
                 else:
                     sum -= i.profit
             wall=Wallet.objects.get(username=request.user.username)
-            return render(request, 'Stock/wallet.html', {'allp': round(sum,2),'pho':pol,'payrs':round(pay,2),'payds':round(pay/70,2),'wall':wall.balance})
+            return render(request, 'Stock/wallet.html', {'allp': round(sum,2),'pho':pol,'payrs':round(pay,2),'payds':round(pay/70,2),'wall':wall.balance,'title':'Invest N Grow - Wallet'})
         else:
             messages.warning(request,"Nothing Traded Till Now")
-            return render(request, 'Stock/wallet.html',)
+            return render(request, 'Stock/wallet.html',{'title':'Invest N Grow - Wallet'})
     else:
         auth.logout(request)
         return render(request, 'login/login.html')
@@ -231,59 +233,44 @@ def buystocks(request):
             url = "http://d.yimg.com/autoc.finance.yahoo.com/autoc?query={}&region=1&lang=en".format(stock)
 
             result = requests.get(url).json()
-
+            name="aaaaa"
             for x in result['ResultSet']['Result']:
                 if x['symbol'] == stock:
                     name=x['name']
                     break
-            from yahoo_fin import stock_info as si
-            price=si.get_live_price(stock)
-            '''start = date.today()
-            end = date.today()
-            url = "https://pkgstore.datahub.io/core/nasdaq-listings/nasdaq-listed_csv/data/7665719fb51081ba0bd834fde71ce822/nasdaq-listed_csv.csv"
-            s = requests.get(url).content
-            companies = pd.read_csv(io.StringIO(s.decode('utf-8')))
-    
-            companies = companies.loc[companies['Symbol'] == stock]
-            Symbols = companies['Symbol'].tolist()
-            Name = companies['Company Name'].tolist()
-            stock_final = pd.DataFrame()
-            for i, j in zip(Symbols, Name):
-    
-                # print the symbol which is being downloaded
-                print(str(Symbols.index(i)) + str(' : ') + i, sep=',', end=',', flush=True)
-    
-                try:
-                    # download the stock price
-                    stock = []
-                    stock = yf.download(i, start=start, end=end, progress=False)
-    
-                    # append the individual stock prices
-                    if len(stock) == 0:
-                        None
-                    else:
-                        stock['Ticker'] = i
-                        stock['Name'] = j
-                        stock_final = stock_final.append(stock, sort=False)
-                except Exception:
-                    None
-            # stock_final = stock_final.sort_values(by='Adj Close', ascending=False)
-            stock_final.rename(columns={'Adj Close': 'Adj_Close'}, inplace=True)
-            data = stock_final[['Name','Ticker','Adj_Close']]'''
+            if(name!="aaaaa"):
+                from yahoo_fin import stock_info as si
+                price=si.get_live_price(stock)
+                print("bdsvkjbkjijbb",price)
 
-            alldata = [{'Name':name,'Ticker':stock,'Adj_Close':price}]
+
+                alldata = [{'Name':name,'Ticker':stock,'Adj_Close':price}]
 
 
 
-            context = {'d': alldata}
-            print(alldata)
-            ins=Activity(name=name,type='search',quantity=0,datebought=date.today(),username=request.user.username)
-            ins.save()
-            po = Profile.objects.get(email=request.user.email)
-            return render(request, 'Stock/buystocks.html', {'d': alldata,'pho':po})
+                context = {'d': alldata}
+                print(alldata)
+                ins=Activity(name=name,type='search',quantity=0,datebought=date.today(),username=request.user.username)
+                ins.save()
+                po = Profile.objects.get(email=request.user.email)
+
+                return render(request, 'Stock/buystocks.html', {'d': alldata,'pho':po,'title':'Invest N Grow - Buy'})
+            else:
+
+                po = Profile.objects.get(email=request.user.email)
+                from yahoo_fin import stock_info as si
+                g = si.get_day_gainers().head(5)
+                g.rename(columns={'Market Cap': 'Market', 'Price (Intraday)': 'Price', '% Change': 'change'},
+                         inplace=True)
+                json_records = g.reset_index().to_json(orient='records')
+                datag = []
+                datag = json.loads(json_records)
+                messages.error(request, "Stock doesn't exist! Please enter valid Stock Ticker")
+                return render(request, 'Stock/buystocks.html', {'pho': po, 'datag': datag,'title':'Invest N Grow - Buy'})
+
 
         else:
-            '''import pandas as pd
+            import pandas as pd
             import yfinance as yf
             import datetime
             import time
@@ -296,7 +283,7 @@ def buystocks(request):
             url = "https://pkgstore.datahub.io/core/nasdaq-listings/nasdaq-listed_csv/data/7665719fb51081ba0bd834fde71ce822/nasdaq-listed_csv.csv"
             s = requests.get(url).content
             companies = pd.read_csv(io.StringIO(s.decode('utf-8')))
-            companies = companies[1:6]
+            companies=companies.sample(n=10)
             print(companies)
 
             Symbols = companies['Symbol'].tolist()
@@ -325,14 +312,15 @@ def buystocks(request):
             #stock_final = stock_final.sort_values(by='Adj Close', ascending=False)
             stock_final.rename(columns={'Adj Close': 'Adj_Close'}, inplace=True)
             print("sjbvjdjddddddddd",stock_final)
-            data=stock_final[['Name', 'Ticker', 'Adj_Close']].head(20)
-            print("mnmnmnmn",data)
+            stock_final=stock_final.head(20)
+            #data=stock_final[['Name', 'Ticker', 'Adj_Close']].head(20)
+            #print("mnmnmnmn",data)
             alldata=[]
-            for i in range(data.shape[0]):
-                temp=data.iloc[i]
+            for i in range(stock_final.shape[0]):
+                temp=stock_final.iloc[i]
                 alldata.append(dict(temp))
                 context={'d':alldata}
-            print(alldata)'''
+            print(alldata)
             po = Profile.objects.get(email=request.user.email)
 
             from yahoo_fin import stock_info as si
@@ -341,7 +329,7 @@ def buystocks(request):
             json_records = g.reset_index().to_json(orient='records')
             datag = []
             datag = json.loads(json_records)
-            return render(request,'Stock/buystocks.html',{'pho':po,'datag':datag})
+            return render(request,'Stock/buystocks.html',{'pho':po,'d':alldata,'datag':datag,'title':'Invest N Grow - Buy'})
     else:
         auth.logout(request)
         return render(request, 'login/login.html')
@@ -391,11 +379,11 @@ def sellstocks(request):
         if(Buystock.objects.filter(username=request.user.username).exists()):
             stocks = Buystock.objects.filter(username=request.user.username)
             po = Profile.objects.get(email=request.user.email)
-            return render(request, 'Stock/sellstocks.html', {'d': stocks,'pho':po})
+            return render(request, 'Stock/sellstocks.html', {'d': stocks,'pho':po,'title':'Invest N Grow - Sell'})
         else:
             messages.warning(request,"No Stocks are bought Till Now")
             po = Profile.objects.get(email=request.user.email)
-            return render(request, 'Stock/sellstocks.html',{'pho':po})
+            return render(request, 'Stock/sellstocks.html',{'pho':po,'title':'Invest N Grow - Sell'})
     else:
         auth.logout(request)
         return render(request, 'login/login.html')
@@ -423,7 +411,7 @@ def viewstock(request):
             return render(request,'Stock/viewstock.html',{'pho':po,'cls':df['Close'].tolist(),'hgh':df['High'].tolist(),'lw':df['Low'].tolist(),'date':df.index.tolist()})
         else:
             po = Profile.objects.get(email=request.user.email)
-            return render(request, 'Stock/viewstock.html',{'pho':po})
+            return render(request, 'Stock/viewstock.html',{'pho':po,'title':'Invest N Grow - Details'})
     else:
         auth.logout(request)
         return render(request, 'login/login.html')
