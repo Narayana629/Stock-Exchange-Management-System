@@ -40,7 +40,7 @@ def overview(request):
             for i in all:
                 from yahoo_fin import stock_info as si
                 r = si.get_live_price(i.ticker)
-
+                r=round(r,2)
                 s = Stockd.objects.get(ticker=i.ticker,username=request.user.username)
                 s.lastprice = r
                 s.change = (s.lastprice / s.price)*100
@@ -223,7 +223,7 @@ def wallet(request):
                 else:
                     sum -= i.profit
             wall=Wallet.objects.get(username=request.user.username)
-            return render(request, 'Stock/wallet.html', {'allp': round(sum,2),'pho':pol,'payrs':round(pay,2),'payds':round(pay/70,2),'payy':payr,'wall':wall.balance,'title':'Invest N Grow - Wallet'})
+            return render(request, 'Stock/wallet.html', {'allp': round(sum,2),'pho':pol,'payrs':round(pay,2),'payds':round(pay/70,2),'payy':payr,'wall':round(wall.balance,2),'title':'Invest N Grow - Wallet'})
         else:
             messages.warning(request,"Nothing Traded Till Now")
             return render(request, 'Stock/wallet.html',{'title':'Invest N Grow - Wallet'})
@@ -259,7 +259,7 @@ def buystocks(request):
                 print("bdsvkjbkjijbb",price)
 
 
-                alldata = [{'Name':name,'Ticker':stock,'Adj_Close':price}]
+                alldata = [{'Name':name,'Ticker':stock,'Adj_Close':round(price,2)}]
 
 
 
@@ -330,7 +330,7 @@ def buystocks(request):
             print("sjbvjdjddddddddd", stock_final)
             stock_final = stock_final.drop_duplicates(subset = ["Ticker"])
             stock_final = stock_final.head(20)
-
+            stock_final=stock_final.round(2)
             alldata = []
             for i in range(stock_final.shape[0]):
                 temp = stock_final.iloc[i]
@@ -394,8 +394,10 @@ def sellstocks(request):
 
         if(Buystock.objects.filter(username=request.user.username).exists()):
             stocks = Buystock.objects.filter(username=request.user.username)
+            sip=Stockd.objects.filter(username=request.user.username)
+
             po = Profile.objects.get(email=request.user.email)
-            return render(request, 'Stock/sellstocks.html', {'d': stocks,'pho':po,'title':'Invest N Grow - Sell'})
+            return render(request, 'Stock/sellstocks.html', {'d': stocks,'pho':po,'sip':sip,'title':'Invest N Grow - Sell'})
         else:
             messages.warning(request,"No Stocks are bought Till Now")
             po = Profile.objects.get(email=request.user.email)
@@ -463,9 +465,13 @@ def logout(request):
 def paytwallet(request):
     amount=request.POST['paytwallet']
     wall=Wallet.objects.get(username=request.user.username)
-    wall.balance=wall.balance-float(amount)
-    wall.save()
-    return redirect ('wallet')
+    if float(amount)<wall.balance:
+        wall.balance=wall.balance-float(amount)
+        wall.save()
+        return redirect ('wallet')
+    else:
+        messages.error(request,"Enough Balance is not there in wallet, Topup immediately")
+        return redirect('wallet')
 
 def get_symbol(symbol):
     symbol_list = requests.get("http://chstocksearch.herokuapp.com/api/{}".format(symbol)).json()

@@ -26,6 +26,7 @@
 
                           <th> Stock Name </th>
                           <th> Ticker </th>
+                            <th>Price</th>
                           <th> Amount </th>
                             <th> Quantity </th>
                         </tr>
@@ -34,7 +35,7 @@
 
                         {% if d %}
 
-                      {% for i in d %}
+                      {% for i in sip %}
 
 
                      <tr>
@@ -45,7 +46,7 @@
                           <td >
                               <input type="hidden" name="ticker" value="{{i.ticker}}" readonly>{{i.ticker}}</input>
                           </td>
-
+                                <td>{{ i.lastprice }}</td>
 
                           <td>  {{i.quantity }} </td>
                          <td> <input type="number" name="sellqty" required></td>
