@@ -376,15 +376,64 @@ def sellstocks(request):
                 ins = Activity(name=name, type='Sell', quantity=sellqty, datebought=date.today(),username=request.user.username)
                 ins.save()
                 messages.success(request, "Sucessfully Sold the Stocks")
+        import pandas as pd
+        import yfinance as yf
+        import datetime
+        import time
+        import requests
+        import io
 
+        start = datetime.datetime(2021, 5, 1)
+        end = datetime.datetime(2021, 5, 1)
+
+        url = "https://pkgstore.datahub.io/core/nasdaq-listings/nasdaq-listed_csv/data/7665719fb51081ba0bd834fde71ce822/nasdaq-listed_csv.csv"
+        s = requests.get(url).content
+        companies = pd.read_csv(io.StringIO(s.decode('utf-8')))
+        companies = companies.sample(n=10)
+        print(companies)
+
+        Symbols = companies['Symbol'].tolist()
+        Name = companies['Company Name'].tolist()
+
+        stock_final = pd.DataFrame()
+        for i, j in zip(Symbols, Name):
+
+            # print the symbol which is being downloaded
+            print(str(Symbols.index(i)) + str(' : ') + i, sep=',', end=',', flush=True)
+
+            try:
+                # download the stock price
+                stock = []
+                stock = yf.download(i, start=start, end=end, progress=False)
+
+                # append the individual stock prices
+                if len(stock) == 0:
+                    None
+                else:
+                    stock['Ticker'] = i
+                    stock['Name'] = j
+                    stock_final = stock_final.append(stock, sort=False)
+            except Exception:
+                None
+        # stock_final = stock_final.sort_values(by='Adj Close', ascending=False)
+        stock_final.rename(columns={'Adj Close': 'Adj_Close'}, inplace=True)
+        print("sjbvjdjddddddddd", stock_final)
+        stock_final = stock_final.head(20)
+
+        alldata = []
+        for i in range(stock_final.shape[0]):
+            temp = stock_final.iloc[i]
+            alldata.append(dict(temp))
+            context = {'d': alldata}
+        print(alldata)
         if(Buystock.objects.filter(username=request.user.username).exists()):
             stocks = Buystock.objects.filter(username=request.user.username)
             po = Profile.objects.get(email=request.user.email)
-            return render(request, 'Stock/sellstocks.html', {'d': stocks,'pho':po,'title':'Invest N Grow - Sell'})
+            return render(request, 'Stock/sellstocks.html', {'d': stocks,'d': alldata,'pho':po,'title':'Invest N Grow - Sell'})
         else:
             messages.warning(request,"No Stocks are bought Till Now")
             po = Profile.objects.get(email=request.user.email)
-            return render(request, 'Stock/sellstocks.html',{'pho':po,'title':'Invest N Grow - Sell'})
+            return render(request, 'Stock/sellstocks.html',{'pho':po,'d': alldata,'title':'Invest N Grow - Sell'})
     else:
         auth.logout(request)
         return render(request, 'login/login.html')
