@@ -278,8 +278,8 @@ def buystocks(request):
             import requests
             import io
 
-            start = datetime.datetime(2021, 5, 1)
-            end = datetime.datetime(2021, 5, 1)
+            #start = datetime.datetime(2021, 5, 1)
+            #end = datetime.datetime(2021, 5, 1)
 
             url = "https://pkgstore.datahub.io/core/nasdaq-listings/nasdaq-listed_csv/data/7665719fb51081ba0bd834fde71ce822/nasdaq-listed_csv.csv"
             s = requests.get(url).content
@@ -299,7 +299,7 @@ def buystocks(request):
                 try:
                     # download the stock price
                     stock = []
-                    stock = yf.download(i, start=start, end=end, progress=False)
+                    stock = yf.download(i, start=date.today(), end=date.today(), progress=False)
 
                     # append the individual stock prices
                     if len(stock) == 0:
