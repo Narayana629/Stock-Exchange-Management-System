@@ -258,66 +258,17 @@ def buystocks(request):
 
                 return render(request, 'Stock/buystocks.html', {'d': alldata,'pho':po,'title':'Invest N Grow - Buy'})
             else:
-                import pandas as pd
-                import yfinance as yf
-                import datetime
-                import time
-                import requests
-                import io
 
-                start = datetime.datetime(2021, 5, 1)
-                end = datetime.datetime(2021, 5, 1)
-
-                url = "https://pkgstore.datahub.io/core/nasdaq-listings/nasdaq-listed_csv/data/7665719fb51081ba0bd834fde71ce822/nasdaq-listed_csv.csv"
-                s = requests.get(url).content
-                companies = pd.read_csv(io.StringIO(s.decode('utf-8')))
-                companies = companies.sample(n=10)
-                print(companies)
-
-                Symbols = companies['Symbol'].tolist()
-                Name = companies['Company Name'].tolist()
-
-                stock_final = pd.DataFrame()
-                for i, j in zip(Symbols, Name):
-
-                    # print the symbol which is being downloaded
-                    print(str(Symbols.index(i)) + str(' : ') + i, sep=',', end=',', flush=True)
-
-                    try:
-                        # download the stock price
-                        stock = []
-                        stock = yf.download(i, start=start, end=end, progress=False)
-
-                        # append the individual stock prices
-                        if len(stock) == 0:
-                            None
-                        else:
-                            stock['Ticker'] = i
-                            stock['Name'] = j
-                            stock_final = stock_final.append(stock, sort=False)
-                    except Exception:
-                        None
-                # stock_final = stock_final.sort_values(by='Adj Close', ascending=False)
-                stock_final.rename(columns={'Adj Close': 'Adj_Close'}, inplace=True)
-                print("sjbvjdjddddddddd", stock_final)
-                stock_final = stock_final.head(20)
-
-                alldata=[]
-                for i in range(stock_final.shape[0]):
-                    temp = stock_final.iloc[i]
-                    alldata.append(dict(temp))
-                    context = {'d': alldata}
-                print(alldata)
                 po = Profile.objects.get(email=request.user.email)
                 from yahoo_fin import stock_info as si
                 g = si.get_day_gainers().head(5)
-                g.rename(columns={'Market Cap': 'Market','d': alldata, 'Price (Intraday)': 'Price', '% Change': 'change'},
+                g.rename(columns={'Market Cap': 'Market', 'Price (Intraday)': 'Price', '% Change': 'change'},
                          inplace=True)
                 json_records = g.reset_index().to_json(orient='records')
                 datag = []
                 datag = json.loads(json_records)
                 messages.error(request, "Stock doesn't exist! Please enter valid Stock Ticker")
-                return render(request, 'Stock/buystocks.html', {'pho': po, 'd': alldata,'datag': datag,'title':'Invest N Grow - Buy'})
+                return render(request, 'Stock/buystocks.html', {'pho': po,'datag': datag,'title':'Invest N Grow - Buy'})
 
 
         else:
