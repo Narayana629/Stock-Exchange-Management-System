@@ -169,6 +169,7 @@ def activity(request):
 def wallet(request):
     if not Wallet.objects.filter(username=request.user.username).exists():
         ins = Wallet(username=request.user.username)
+        ins.balance=0
         ins.save()
 
     if request.user.is_authenticated:
