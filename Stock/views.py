@@ -300,7 +300,7 @@ def buystocks(request):
                 try:
                     # download the stock price
                     stock = []
-                    stock = yf.download(i, start=date.today(), end=date.today(), progress=False)
+                    stock = yf.download(i, start='2021-5-12', end='2021-5-13', progress=False)
 
                     # append the individual stock prices
                     if len(stock) == 0:
