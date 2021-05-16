@@ -284,7 +284,8 @@ def buystocks(request):
             url = "https://pkgstore.datahub.io/core/nasdaq-listings/nasdaq-listed_csv/data/7665719fb51081ba0bd834fde71ce822/nasdaq-listed_csv.csv"
             s = requests.get(url).content
             companies = pd.read_csv(io.StringIO(s.decode('utf-8')))
-            companies = companies.sample(n=10)
+            #companies = companies.sample(n=10)
+            companies=companies[1:10]
             print(companies)
 
             Symbols = companies['Symbol'].tolist()
