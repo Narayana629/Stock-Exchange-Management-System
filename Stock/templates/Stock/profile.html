@@ -167,9 +167,9 @@
                             <div class="col-sm-9">
 
                                 {% if prof1.dateofbirth  %}
-                                <input type="text" class="form-control" placeholder="yyyy-mm-dd" name="dob" value="2002-08-17" />
+                                <input type="date" class="form-control" placeholder="yyyy-mm-dd" name="dob" value="2002-08-17" />
                                  {% else %}
-                                <input type="text" class="form-control" name="dob" >
+                                <input type="date" class="form-control" name="dob" >
                                 {% endif %}
 
                             </div>
@@ -197,9 +197,9 @@
                             <div class="col-sm-9">
 
                                      {% if prof1.phone  %}
-                                <input type="text" class="form-control" name="phone" value="{{ prof1.phone }}"/>
+                                <input type="number" class="form-control" name="phone" value="{{ prof1.phone }}"/>
                                  {% else %}
-                                <input type="text" class="form-control" name="phone" >
+                                <input type="number" class="form-control" name="phone" >
                                 {% endif %}
 
                             </div>
@@ -232,7 +232,7 @@
                           <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Upload your photo</label>
                               <div class="col-sm-9">
-                              <input type="file" name="photo1" />
+                              <input type="file" name="photo1" accept="image/*"/>
                               </div>
                           </div>
                         </div>
@@ -290,9 +290,9 @@
                             <div class="col-sm-9">
 
                                  {% if prof1.postcode  %}
-                                <input type="text" class="form-control" name="postcode" value="{{ prof1.postcode }}"/>
+                                <input type="number" class="form-control" name="postcode" value="{{ prof1.postcode }}"/>
                                  {% else %}
-                                <input type="text" class="form-control" name="postcode" >
+                                <input type="number" class="form-control" name="postcode" >
                                 {% endif %}
 
                             </div>
@@ -329,6 +329,8 @@
                           </div>
                         </div>
                       </div>
+
+
                         <input type="hidden" value="updated" name="update">
                       <input type="submit"  class="btn btn-warning btn-rounded btn-fw" value="update">
                     </form>
