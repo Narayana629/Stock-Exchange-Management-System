@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-(50a5#3c5%0z)q^0nv+=k=j4^848&%38*v^+w4(y61_jm(^-wm
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1','stockexchangesystem.herokuapp.com','investngrow.herokuapp.com','sdpinvestngrow.herokuapp.com']
+ALLOWED_HOSTS = ['127.0.0.1','stockexchangesystem.herokuapp.com','investngrow.herokuapp.com','sdpinvestngrow.herokuapp.com','sdp-442.herokuapp.com']
 
 
 # Application definition
