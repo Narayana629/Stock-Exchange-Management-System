@@ -17,17 +17,22 @@
 {% endfor %}
 </ul>
 {% endif %}
-{% if payrs %}
+{% if payrs  %}
+{% if payy != -1 %}
 <center>
-<form action="/Stock/wallet" method="post">
+<form action="/Stock/paytwallet" method="post">
     {% csrf_token %}
-    <input type="hidden" name="paytwallet" value="yes">
+    <input type="hidden" name="paytwallet" value="{{ payrs }}">
    <input type="hidden" name="paywall" value="{{ payrs }}"></input>
 <button type="submit" class="btn btn-warning btn-rounded btn-fw" >PAY RS.{{payrs}}/- NOW From Wallet </button>
 </form>
 </center>
+{% else %}
+<center><button  class="btn btn-warning btn-rounded btn-fw" >PAY RS.{{ payrs }}/- NOW </button>
+</center>
 {% endif %}
-{% if payds    %}
+{% endif %}
+{% if payds   %}
 <form name="pform">
 <input type="hidden" name="payt" value="{{ payds }}">
 </form>
@@ -70,7 +75,8 @@
         }).render('#paypal-button-container');
     </script>
 </center>
-{% endif %}
+{% else %}
+
 <div class="row">
  <div class="col-md-6 grid-margin stretch-card average-price-card">
                     <div class="card text-white">
@@ -109,12 +115,27 @@
 
 
 <center>
-<button type="submit" class="btn btn-warning btn-rounded btn-fw">TOPUP </button>
-</center><div >
+      <div class="col-md-6 grid-margin stretch-card" style="width:300px;">
+                    <div class="card">
+                      <div class="card-body">
 
-     <!--<input type="hidden" class="btn btn-warning btn-rounded btn-fw">.</input>
--->
-   </div>
+<h6>Now , Topup your wallet within no time</h6>
+                          <br>
+                          <form action="wallet" method="post">
+                              {% csrf_token %}
+                              <input type="number" name="topup" placeholder=" Enter amount"></input>
+
+<br>
+<br>
+
+<button type="submit" class="btn btn-warning btn-rounded btn-fw">TOPUP </button>
+
+                          </form>
+                      </div>
+                    </div>
+                  </div>
+
+
 <!--<button type="submit" class="btn btn-warning btn-rounded btn-fw">WithDraw</button>
    <div class="col-md-4 grid-margin stretch-card">
      <input type="hidden" class="btn btn-warning btn-rounded btn-fw">.</input>
@@ -123,9 +144,8 @@
 
 
 <br><br>
-<center>
+
               <div class="col-md-4 grid-margin stretch-card">
-                  <center>
                 <div class="card">
                   <div class="card-body">
                     <h4 class="card-title mb-0">Accepted Payment Methods</h4><br>
@@ -164,7 +184,8 @@
                     </div></a>
                   </div>
                 </div>
-                  </center>
+
               </div>
 </center>
+{% endif %}
 {% endblock content %}

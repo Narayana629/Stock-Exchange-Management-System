@@ -17,6 +17,7 @@ import plotly.graph_objects as go
 from .models import Profile, Buystock, Activity, Stockd, Wallet
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from datetime import timedelta
 from pandas_datareader import data
 import yfinance as yf
 from django.http import HttpResponse, JsonResponse
@@ -173,30 +174,43 @@ def wallet(request):
     if request.user.is_authenticated:
 
         pay=0
+        payr = 0
         if request.method=='POST':
-            ticker=request.POST['ticker']
-            quantity=request.POST['quantity']
-            quantity=int(quantity)
-            name=request.POST['name']
-            price=request.POST['price']
-            price=float(price)
-            pay=quantity*price
-            pay=round(pay,2)
-            username=None
-            if request.user.is_authenticated:
-                username = request.user.username
-            insac = Activity(name=name, type='Buy', quantity=int(quantity), datebought=date.today(),username=username)
-            insac.save()
-            if Buystock.objects.filter(username=username,ticker=ticker).exists():
-                insu=Buystock.objects.get(username=username,ticker=ticker)
-                insu.quantity=insu.quantity+quantity
-                insu.save()
+
+            if request.POST.get('topup') :
+                price = request.POST['topup']
+                price=float(price)
+                wall = Wallet.objects.get(username=request.user.username)
+                wall.balance=wall.balance+price
+                wall.save()
+                pay=price
+                payr=-1
             else:
-                ins=Buystock(username=username,ticker=ticker,quantity=int(quantity),datebought=date.today(),name=name,price=price)
+                ticker=request.POST['ticker']
+                quantity=request.POST['quantity']
+                quantity=int(quantity)
+                name=request.POST['name']
+                price=request.POST['price']
+                price=float(price)
+                pay=quantity*price
+                pay=round(pay,2)
+                payr=round(pay,2)
+
+                username=None
+                if request.user.is_authenticated:
+                    username = request.user.username
+                insac = Activity(name=name, type='Buy', quantity=int(quantity), datebought=date.today(),username=username)
+                insac.save()
+                if Buystock.objects.filter(username=username,ticker=ticker).exists():
+                    insu=Buystock.objects.get(username=username,ticker=ticker)
+                    insu.quantity=insu.quantity+quantity
+                    insu.save()
+                else:
+                    ins=Buystock(username=username,ticker=ticker,quantity=int(quantity),datebought=date.today(),name=name,price=price)
+                    ins.save()
+                ins = Stockd(username=username, ticker=ticker, quantity=int(quantity), datebought=date.today(), name=name,
+                               price=price,lastprice=price,change=0,type='Profit',profit=0)
                 ins.save()
-            ins = Stockd(username=username, ticker=ticker, quantity=int(quantity), datebought=date.today(), name=name,
-                           price=price,lastprice=price,change=0,type='Profit',profit=0)
-            ins.save()
 
 
         if(Stockd.objects.filter(username=request.user.username)):
@@ -209,7 +223,7 @@ def wallet(request):
                 else:
                     sum -= i.profit
             wall=Wallet.objects.get(username=request.user.username)
-            return render(request, 'Stock/wallet.html', {'allp': round(sum,2),'pho':pol,'payrs':round(pay,2),'payds':round(pay/70,2),'wall':wall.balance,'title':'Invest N Grow - Wallet'})
+            return render(request, 'Stock/wallet.html', {'allp': round(sum,2),'pho':pol,'payrs':round(pay,2),'payds':round(pay/70,2),'payy':payr,'wall':wall.balance,'title':'Invest N Grow - Wallet'})
         else:
             messages.warning(request,"Nothing Traded Till Now")
             return render(request, 'Stock/wallet.html',{'title':'Invest N Grow - Wallet'})
@@ -277,13 +291,14 @@ def buystocks(request):
             import time
             import requests
             import io
+            end = date.today()
+            start = yesterday = end - timedelta(days = 1)
 
-            #start = datetime.datetime(2021, 5, 1)
-            #end = datetime.datetime(2021, 5, 1)
 
             url = "https://pkgstore.datahub.io/core/nasdaq-listings/nasdaq-listed_csv/data/7665719fb51081ba0bd834fde71ce822/nasdaq-listed_csv.csv"
             s = requests.get(url).content
             companies = pd.read_csv(io.StringIO(s.decode('utf-8')))
+            companies=companies.drop_duplicates(subset = ["Symbol"])
             companies = companies.sample(n=10)
             print(companies)
 
@@ -313,6 +328,7 @@ def buystocks(request):
             # stock_final = stock_final.sort_values(by='Adj Close', ascending=False)
             stock_final.rename(columns={'Adj Close': 'Adj_Close'}, inplace=True)
             print("sjbvjdjddddddddd", stock_final)
+            stock_final = stock_final.drop_duplicates(subset = ["Ticker"])
             stock_final = stock_final.head(20)
 
             alldata = []
@@ -444,7 +460,12 @@ def logout(request):
     auth.logout(request)
     return render(request,'login/login.html')
 
-
+def paytwallet(request):
+    amount=request.POST['paytwallet']
+    wall=Wallet.objects.get(username=request.user.username)
+    wall.balance=wall.balance-float(amount)
+    wall.save()
+    return redirect ('wallet')
 
 def get_symbol(symbol):
     symbol_list = requests.get("http://chstocksearch.herokuapp.com/api/{}".format(symbol)).json()
