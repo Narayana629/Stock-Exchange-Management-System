@@ -302,7 +302,7 @@ def buystocks(request):
                 print("sjbvjdjddddddddd", stock_final)
                 stock_final = stock_final.head(20)
 
-                alldata = []
+                alldata=[]
                 for i in range(stock_final.shape[0]):
                     temp = stock_final.iloc[i]
                     alldata.append(dict(temp))
