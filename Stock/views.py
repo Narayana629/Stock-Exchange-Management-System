@@ -467,7 +467,7 @@ def paytwallet(request):
     amount=request.POST['paytwallet']
     wall=Wallet.objects.get(username=request.user.username)
     if float(amount)<wall.balance:
-        messages.sucess(request,"Stock Bought Sucessfully")
+        messages.success(request,"Stock Bought Sucessfully")
 
         wall.balance=wall.balance-float(amount)
         wall.save()
