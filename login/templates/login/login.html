@@ -9,10 +9,16 @@
     <link rel="stylesheet" href="{% static 'login.css' %}">
    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="shortcut icon" href="{% static 'assets/images/title invesngrow.png' %}" />
+<style>
+.rotate45 {
 
+  transform: rotate(315deg);
+}
+</style>
 </head>
-<body>
-<center><img src="{% static 'assets/images/Invest and grow logo.png' %}" alt="logo" height="100" width="250"/></center>
+<body  >
+<br><br><br>
+<img src="{% static 'assets/images/Invest and grow logo.png' %}" alt="logo" height="100" width="250"  class="rotate45" style="border-radius:10%;margin:20px;"/>
 
   {% if messages %}
 <ul class="messages">
