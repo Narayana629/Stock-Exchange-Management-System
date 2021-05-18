@@ -50,3 +50,5 @@ def register(request):
 
     return render(request,'login/register.html')
 
+def contactus(request):
+    return render(request,"login/contactus.html")
