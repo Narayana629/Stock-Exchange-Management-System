@@ -1,0 +1,78 @@
+{% extends "Stock/index.html" %}
+{% block content %}
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+<div class="container-fluid p-0">
+  <div class="alert {{ message.tags }} alert-dismissible" role="alert" >
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    {{ message }}
+  </div>
+</div>
+{% endfor %}
+</ul>
+{% endif %}
+<h2>AUTO PAY THROUGH WALLET</h2>
+<div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body" >
+
+                    <table class="table table-striped"  class="table">
+                      <thead>
+                        <tr>
+
+                          <th> Stock Name </th>
+                          <th> Ticker </th>
+                          <th> Amount </th>
+                            <th> Quantity </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+
+
+
+                      {% for i in d %}
+
+
+                     <tr>
+                         <form action="/Stock/autopay" method="post">
+                         {% csrf_token %}
+                          <td>  <input type="hidden" name="name" value="{{i.Name}}" readonly>{{i.Name}}</input> </td>
+
+                          <td >
+                              <input type="hidden" name="ticker" value="{{i.Ticker}}" readonly>{{i.Ticker}}</input>
+                          </td>
+
+
+                          <td> <input type="hidden" name="price" value="{{i.Adj_Close}}" readonly> Rs.{{i.Adj_Close }} /- </td>
+                              <td><button type="submit" class="btn btn-warning btn-rounded btn-fw">PAY THROUGH WALLET</button></td>
+
+ </form>
+                         <form action="/Stock/viewstock" method="post">
+                         {% csrf_token %}
+                             <input type="hidden" name="name" value="{{i.Name}}" readonly>
+                              <input type="hidden" name="ticker" value="{{i.Ticker}}" readonly></input>
+                             <td><button type="submit" class="btn btn-warning btn-rounded btn-fw">VIEW</button></td>
+                         </form>
+                     </tr>
+
+
+
+
+                      {% endfor %}
+
+
+
+
+
+
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+
+{% endblock content %}

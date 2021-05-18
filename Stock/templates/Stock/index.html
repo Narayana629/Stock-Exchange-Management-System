@@ -198,6 +198,12 @@
                 <span class="menu-title">Sell Stocks</span>
               </a>
             </li>
+              <li class="nav-item">
+              <a class="nav-link" href="{% url 'autopay' %}">
+                <i class="menu-icon typcn typcn-user-outline"></i>
+                <span class="menu-title">Auto Pay</span>
+              </a>
+            </li>
             {% if user.is_authenticated %}
             <li class="nav-item">
               <a class="nav-link" href="{% url 'logout' %}">

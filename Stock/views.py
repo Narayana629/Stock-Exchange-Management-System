@@ -532,6 +532,104 @@ def paytwallet(request):
         messages.error(request,"Enough Balance is not there in wallet, Topup immediately")
         return redirect('wallet')
 
+def autopay(request):
+    if request.method=="POST":
+        ticker = request.POST['ticker']
+        quantity = 1
+        quantity = int(quantity)
+        name = request.POST['name']
+        price = request.POST['price']
+        price = float(price)
+        wall = Wallet.objects.get(username=request.user.username)
+        wall.balance = wall.balance - price
+        wall.save()
+        insac = Activity(name=name, type='Buy', quantity=int(quantity), datebought=date.today(), username=request.user.username)
+        insac.save()
+        if Buystock.objects.filter(username=request.user.username, ticker=ticker).exists():
+            insu = Buystock.objects.get(username=request.user.username, ticker=ticker)
+            insu.quantity = insu.quantity + quantity
+            insu.save()
+        else:
+            ins = Buystock(username=request.user.username, ticker=ticker, quantity=int(quantity), datebought=date.today(), name=name,
+                           price=price)
+            ins.save()
+
+        ins = Stockd(username=request.user.username, ticker=ticker, quantity=int(quantity), datebought=date.today(), name=name,
+                     price=price, lastprice=price, change=0, type='Profit', profit=0)
+        ins.save()
+        messages.success(request,"Successfully bought the Stock")
+        allp = Stockd.objects.filter(username=request.user.username)
+        pol = Profile.objects.get(email=request.user.email)
+        sum = 0
+        for i in allp:
+            if (i.type == 'Profit'):
+                sum += i.profit
+            else:
+                sum -= i.profit
+        wall = Wallet.objects.get(username=request.user.username)
+        return render(request,"Stock/wallet.html",{'allp': round(sum,2),'pho':pol,'wall':round(wall.balance,2),'title':'Invest N Grow - Wallet'})
+    else:
+
+        import pandas as pd
+        import yfinance as yf
+        import datetime
+        import time
+        import requests
+        import io
+        end = date.today()
+        start = yesterday = end - timedelta(days=1)
+        wall=Wallet.objects.get(username=request.user.username)
+        url = "https://pkgstore.datahub.io/core/nasdaq-listings/nasdaq-listed_csv/data/7665719fb51081ba0bd834fde71ce822/nasdaq-listed_csv.csv"
+        s = requests.get(url).content
+        companies = pd.read_csv(io.StringIO(s.decode('utf-8')))
+        companies = companies.drop_duplicates(subset=["Symbol"])
+        companies = companies.sample(n=20)
+        print(companies)
+
+        Symbols = companies['Symbol'].tolist()
+        Name = companies['Company Name'].tolist()
+
+        stock_final = pd.DataFrame()
+        for i, j in zip(Symbols, Name):
+
+            # print the symbol which is being downloaded
+            print(str(Symbols.index(i)) + str(' : ') + i, sep=',', end=',', flush=True)
+
+            try:
+                # download the stock price
+                stock = []
+                stock = yf.download(i, start='2021-5-12', end='2021-5-13', progress=False)
+
+                # append the individual stock prices
+                if len(stock) == 0:
+                    None
+                else:
+                    stock['Ticker'] = i
+                    stock['Name'] = j
+                    stock_final = stock_final.append(stock, sort=False)
+            except Exception:
+                None
+        # stock_final = stock_final.sort_values(by='Adj Close', ascending=False)
+        stock_final.rename(columns={'Adj Close': 'Adj_Close'}, inplace=True)
+        print("sjbvjdjddddddddd", stock_final)
+        stock_final = stock_final.drop_duplicates(subset=["Ticker"])
+        stock_final = stock_final.head(20)
+        stock_final = stock_final.round(2)
+        stock_final = stock_final.sort_values(by=["Adj_Close"], ascending=False)
+        stock_final = stock_final[stock_final['Adj_Close'] < wall.balance]
+        alldata = []
+        for i in range(stock_final.shape[0]):
+            temp = stock_final.iloc[i]
+            alldata.append(dict(temp))
+            context = {'d': alldata}
+        print(alldata)
+        po = Profile.objects.get(email=request.user.email)
+
+
+        return render(request, 'Stock/autopay.html',
+                      {'pho': po, 'd': alldata, 'title': 'Invest N Grow - Autopay'})
+
+
 def get_symbol(symbol):
     symbol_list = requests.get("http://chstocksearch.herokuapp.com/api/{}".format(symbol)).json()
 

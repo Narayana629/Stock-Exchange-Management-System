@@ -41,8 +41,8 @@ class Stockd(models.Model):
     quantity = models.IntegerField()
     datebought = models.DateField()
     price = models.FloatField()
-    lastprice = models.FloatField()
-    change = models.FloatField()
+    lastprice = models.FloatField(null=True)
+    change = models.FloatField(null=True)
     type = models.CharField(max_length=60, null=True)
     profit = models.FloatField()
 
