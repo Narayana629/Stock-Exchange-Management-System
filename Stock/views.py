@@ -110,7 +110,7 @@ def profile(request):
             dob=request.POST['dob']
             email=request.POST['email']
 
-            phone=request.POST['phone']
+            #phone=request.POST['phone']
             qualification=request.POST['qualification']
             add1=request.POST['address1']
             add2=request.POST['address2']
@@ -138,8 +138,8 @@ def profile(request):
             insup.country=country
             if dob!='':
                 insup.dateofbirth = dob
-            if phone != '' and phone!=None:
-                insup.phone = phone
+            #if phone != '' and phone!=None:
+             #   insup.phone = phone
             if post != '' and post!=None:
                 insup.postcode = post
             if photo is not None:
