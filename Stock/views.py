@@ -249,11 +249,17 @@ def buystocks(request):
             url = "http://d.yimg.com/autoc.finance.yahoo.com/autoc?query={}&region=1&lang=en".format(stock)
 
             result = requests.get(url).json()
+            sslist=[]
             name="aaaaa"
+            print(result['ResultSet']['Result'])
             for x in result['ResultSet']['Result']:
                 if x['symbol'] == stock:
                     name=x['name']
                     break
+                if stock in x['symbol']:
+                    sslist.append(x['name'])
+
+            print(sslist)
             if(name!="aaaaa"):
                 from yahoo_fin import stock_info as si
                 price=si.get_live_price(stock)
@@ -271,6 +277,56 @@ def buystocks(request):
                 po = Profile.objects.get(email=request.user.email)
 
                 return render(request, 'Stock/buystocks.html', {'d': alldata,'pho':po,'title':'Invest N Grow - Buy'})
+
+            elif sslist:
+                url = "https://pkgstore.datahub.io/core/nasdaq-listings/nasdaq-listed_csv/data/7665719fb51081ba0bd834fde71ce822/nasdaq-listed_csv.csv"
+                s = requests.get(url).content
+                companies = pd.read_csv(io.StringIO(s.decode('utf-8')))
+                companies = companies.drop_duplicates(subset=["Symbol"])
+                bool = companies['Symbol'].str.startswith(stock, na=False)
+                companies=companies[bool]
+                companies=companies[1:20]
+                print(companies)
+
+                Symbols = companies['Symbol'].tolist()
+                Name = companies['Company Name'].tolist()
+                stock_final = pd.DataFrame()
+                for i, j in zip(Symbols, Name):
+
+                    # print the symbol which is being downloaded
+                    print(str(Symbols.index(i)) + str(' : ') + i, sep=',', end=',', flush=True)
+
+                    try:
+                        # download the stock price
+                        stock = []
+                        stock = yf.download(i, start='2021-5-12', end='2021-5-13', progress=False)
+
+                        # append the individual stock prices
+                        if len(stock) == 0:
+                            None
+                        else:
+                            stock['Ticker'] = i
+                            stock['Name'] = j
+                            stock_final = stock_final.append(stock, sort=False)
+                    except Exception:
+                        None
+                # stock_final = stock_final.sort_values(by='Adj Close', ascending=False)
+                stock_final.rename(columns={'Adj Close': 'Adj_Close'}, inplace=True)
+                print("sjbvjdjddddddddd", stock_final)
+                stock_final = stock_final.drop_duplicates(subset=["Ticker"])
+                stock_final = stock_final.head(10)
+                stock_final = stock_final.round(2)
+                alldata = []
+                for i in range(stock_final.shape[0]):
+                    temp = stock_final.iloc[i]
+                    alldata.append(dict(temp))
+                    context = {'d': alldata}
+                print(alldata)
+                po = Profile.objects.get(email=request.user.email)
+
+                return render(request, 'Stock/buystocks.html', {'d': alldata,'pho':po,'title':'Invest N Grow - Buy'})
+
+
             else:
 
                 po = Profile.objects.get(email=request.user.email)
