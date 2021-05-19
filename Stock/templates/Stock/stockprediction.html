@@ -1,0 +1,51 @@
+{% extends "Stock/index.html" %}
+{% block content %}
+<center><h2>Stock Predictions</h2></center>
+<form  action="/Stock/stockprediction" method="post">
+            <div class="form-group">
+                {% csrf_token %}
+              <input type="text" name="predict" class="form-control" placeholder="Search Here"  required><br><br>
+                <center><input type="submit" class="btn btn-warning btn-rounded btn-fw"value="predict"></center>
+            </div>
+          </form>
+{% if d %}
+<center><h2>{{t}}</h2></center>
+<center>
+
+<div class="col-12 grid-margin">
+
+  <div class="col-lg-6 grid-margin stretch-card">
+  <div class="card">
+                  <div class="card-body">
+
+    <table class="table">
+<tr>
+    <td>DATE</td>
+    <td>PRICE</td>
+</tr>
+        {% for i in d %}
+                  <tr>
+                      <td>{{ i.Dat }}</td>
+                           <td>RS.{{i.Predictions}}/-</td>
+
+                        </tr>
+        {% endfor %}
+        <tr>
+
+
+
+
+    </table>
+      </div>
+
+  </div>
+
+  </div>
+
+
+</div>
+        </center>
+{% endif %}
+
+
+{% endblock content %}

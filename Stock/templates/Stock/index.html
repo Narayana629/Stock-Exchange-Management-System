@@ -204,6 +204,12 @@
                 <span class="menu-title">Auto Pay</span>
               </a>
             </li>
+              <li class="nav-item">
+              <a class="nav-link" href="{% url 'stockprediction' %}">
+                <i class="menu-icon typcn typcn-user-outline"></i>
+                <span class="menu-title">Prediction</span>
+              </a>
+            </li>
             {% if user.is_authenticated %}
             <li class="nav-item">
               <a class="nav-link" href="{% url 'logout' %}">

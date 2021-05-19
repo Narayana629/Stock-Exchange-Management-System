@@ -16,6 +16,7 @@ path('logout', views.logout, name="logout"),
 path('api', views.ChartData.as_view()),
 path('paytwallet',views.paytwallet,name="paytwallet"),
     path('autopay',views.autopay,name="autopay"),
+    path('stockprediction',views.stockprediction,name="stockprediction"),
 
 
 ]
