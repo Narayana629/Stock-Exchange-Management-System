@@ -7,7 +7,6 @@ from django.contrib.sites import requests
 from django.shortcuts import render, redirect
 import pandas_datareader as web
 from datetime import datetime, date
-import matplotlib.pyplot as plt
 from plotly.offline import plot
 import pandas as pd
 import datetime as dt
@@ -348,9 +347,13 @@ def buystocks(request):
             import time
             import requests
             import io
-            end = date.today()
-            start = yesterday = end - timedelta(days = 1)
-
+            #end = date.today()
+            #start = yesterday = end - timedelta(days = 1)
+            from datetime import date, timedelta
+            today = date.today()
+            yesterday = today - timedelta(days=1)
+            print(today)
+            print(yesterday)
 
             url = "https://pkgstore.datahub.io/core/nasdaq-listings/nasdaq-listed_csv/data/7665719fb51081ba0bd834fde71ce822/nasdaq-listed_csv.csv"
             s = requests.get(url).content
@@ -371,7 +374,7 @@ def buystocks(request):
                 try:
                     # download the stock price
                     stock = []
-                    stock = yf.download(i, start='2021-5-12', end='2021-5-13', progress=False)
+                    stock = yf.download(i, start=str(yesterday), end=str(today), progress=False)
 
                     # append the individual stock prices
                     if len(stock) == 0:
